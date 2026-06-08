@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Service Planner" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Vehicle Service Planner</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="view-auto">
+  <script>
+    document.body.className = "view-" + (localStorage.getItem("vehicleServicePlannerView") || "auto");
+  </script>
+  <div class="app">
+    <header class="top-header">
+      <div class="brand">
+        <img src="icon.svg" alt="" class="brand-icon" width="40" height="40" />
+        <div>
+          <h1>Service Planner</h1>
+          <p class="subtitle">Fleet maintenance tracker</p>
+        </div>
+      </div>
+      <div class="header-actions desktop-only">
+        <button type="button" id="addVehicleBtnDesktop" class="btn btn-primary">+ Add Vehicle</button>
+        <button type="button" id="exportBtnDesktop" class="btn btn-secondary">Export</button>
+        <label class="btn btn-secondary file-btn">
+          Import
+          <input type="file" id="importInputDesktop" accept=".csv" hidden />
+        </label>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="search-bar">
+        <input type="search" id="searchInput" placeholder="Search reg no or model…" autocomplete="off" />
+      </div>
+      <div class="toolbar-controls">
+        <label class="sort-control">
+          <span class="sort-label">Sort</span>
+          <select id="sortSelect" aria-label="Sort by status">
+            <option value="default">Default order</option>
+            <option value="status-urgent">Status — Urgent first</option>
+            <option value="status-ok">Status — OK first</option>
+          </select>
+        </label>
+        <div class="view-mode" role="group" aria-label="View mode">
+          <span class="view-mode-label">View</span>
+          <div class="view-mode-btns">
+            <button type="button" class="view-btn" data-view="auto">Auto</button>
+            <button type="button" class="view-btn" data-view="mobile">Mobile</button>
+            <button type="button" class="view-btn" data-view="desktop">Desktop</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="install-banner" id="installBanner" hidden>
+      <div class="install-banner-content">
+        <img src="icons/icon-192.png" alt="" class="install-banner-icon" width="48" height="48" />
+        <div class="install-banner-text">
+          <strong id="installBannerTitle">Install App</strong>
+          <p id="installBannerDesc">Add to your home screen for quick access</p>
+        </div>
+      </div>
+      <div class="install-banner-actions">
+        <button type="button" class="btn btn-primary btn-sm" id="installBtn">Install</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="installDismiss">Not now</button>
+      </div>
+    </div>
+
+    <section class="summary" id="summary"></section>
+
+    <section class="mobile-list" id="mobileList" aria-label="Vehicle list"></section>
+
+    <div class="table-wrap desktop-only">
+      <table id="plannerTable">
+        <thead>
+          <tr id="tableHead"></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <nav class="mobile-bar" aria-label="Quick actions">
+    <button type="button" id="addVehicleBtn" class="bar-btn bar-btn-primary">
+      <span class="bar-icon">+</span>
+      <span>Add</span>
+    </button>
+    <button type="button" id="exportBtn" class="bar-btn">
+      <span class="bar-icon">↓</span>
+      <span>Export</span>
+    </button>
+    <label class="bar-btn">
+      <span class="bar-icon">↑</span>
+      <span>Import</span>
+      <input type="file" id="importInput" accept=".csv" hidden />
+    </label>
+    <button type="button" id="installBarBtn" class="bar-btn" hidden>
+      <span class="bar-icon">⬇</span>
+      <span>Install</span>
+    </button>
+  </nav>
+
+  <dialog id="vehicleDialog">
+    <form method="dialog" id="vehicleForm">
+      <div class="dialog-header">
+        <h2 id="dialogTitle">Add Vehicle</h2>
+        <button type="button" class="dialog-close" id="cancelBtn" aria-label="Close">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid">
+          <label>
+            Vehicle Reg No
+            <input type="text" name="regNo" required placeholder="e.g. ABC-1234" inputmode="text" />
+          </label>
+          <label>
+            Vehicle Model
+            <input type="text" name="model" required placeholder="e.g. Toyota Hilux" inputmode="text" />
+          </label>
+          <label>
+            Current ODO (KM)
+            <input type="number" name="currentOdo" min="0" step="1" required inputmode="numeric" />
+          </label>
+          <label>
+            Service Interval (KM)
+            <input type="number" name="serviceInterval" min="1000" step="1000" value="10000" required inputmode="numeric" />
+          </label>
+        </div>
+        <fieldset class="milestones-fieldset">
+          <legend>Completed milestones</legend>
+          <div class="milestone-checks" id="milestoneChecks"></div>
+        </fieldset>
+      </div>
+      <div class="dialog-actions">
+        <button type="submit" class="btn btn-primary btn-block">Save Vehicle</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

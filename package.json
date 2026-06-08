@@ -1,0 +1,10 @@
+{
+  "name": "vehicle-service-planner",
+  "version": "1.0.0",
+  "description": "Mobile-installable vehicle service planning PWA",
+  "scripts": {
+    "start": "npx --yes serve . -l 3000",
+    "start:mobile": "npx --yes serve . -l 3000 --listen 0.0.0.0",
+    "icons": "powershell -ExecutionPolicy Bypass -File scripts/generate-icons.ps1"
+  }
+}
